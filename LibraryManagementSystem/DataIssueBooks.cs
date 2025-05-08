@@ -16,7 +16,7 @@ namespace LibraryManagementSystem
         public string Contact { set; get; }
         public string Email { set; get; }
         public string BookTitle { set; get; }
-        public string Author { set; get; }
+        
         public string DateIssue { set; get; }
         public string DateReturn { set; get; }
         public string Status { set; get; }
@@ -40,11 +40,11 @@ namespace LibraryManagementSystem
                         DataIssueBooks dib = new DataIssueBooks();
                         dib.ID = Convert.ToInt32(reader["id"]);
                         dib.IssueID = reader["issue_id"].ToString();
-                        dib.Name = reader["full_name"].ToString();
+                        dib.Name = reader["name"].ToString();
                         dib.Contact = reader["contact"].ToString();
                         dib.Email = reader["email"].ToString();
                         dib.BookTitle = reader["book_title"].ToString();
-                        dib.Author = reader["author"].ToString();
+                        
                         dib.DateIssue = reader["issue_date"].ToString();
                         dib.DateReturn = reader["return_date"].ToString();
                         dib.Status = reader["status"].ToString();
@@ -84,11 +84,11 @@ namespace LibraryManagementSystem
                         DataIssueBooks dib = new DataIssueBooks();
                         dib.ID = Convert.ToInt32(reader["id"]);
                         dib.IssueID = reader["issue_id"].ToString();
-                        dib.Name = reader["full_name"].ToString();
+                        dib.Name = reader["name"].ToString();
                         dib.Contact = reader["contact"].ToString();
                         dib.Email = reader["email"].ToString();
                         dib.BookTitle = reader["book_title"].ToString();
-                        dib.Author = reader["author"].ToString();
+
                         dib.DateIssue = reader["issue_date"].ToString();
                         dib.DateReturn = reader["return_date"].ToString();
                         dib.Status = reader["status"].ToString();

@@ -49,7 +49,7 @@ namespace LibraryManagementSystem
                 || bookIssue_contact.Text == ""
                 || bookIssue_email.Text == ""
                 || bookIssue_bookTitle.Text == ""
-                || bookIssue_author.Text == ""
+
                 || bookIssue_issueDate.Value == null
                 || bookIssue_returnDate.Value == null
                 || bookIssue_status.Text == ""
@@ -67,17 +67,17 @@ namespace LibraryManagementSystem
                         connect.Open();
 
                         string insertData = "INSERT INTO issues " +
-                            "(issue_id, full_name, contact, email, book_title, author, status, issue_date, return_date, date_insert) " +
-                            "VALUES(@issueID, @fullname, @contact, @email, @bookTitle, @author, @status, @issueDate, @returnDate, @dateInsert)";
+                            "(issue_id, name, contact, email, book_title,  status, issue_date, return_date, date_insert) " +
+                            "VALUES(@issueID, @name, @contact, @email, @bookTitle, @status, @issueDate, @returnDate, @dateInsert)";
 
                         using (MySqlCommand cmd = new MySqlCommand(insertData, connect)) // Ganti SqlCommand dengan MySqlCommand
                         {
                             cmd.Parameters.AddWithValue("@issueID", bookIssue_id.Text.Trim());
-                            cmd.Parameters.AddWithValue("@fullname", bookIssue_name.Text.Trim());
+                            cmd.Parameters.AddWithValue("@name", bookIssue_name.Text.Trim());
                             cmd.Parameters.AddWithValue("@contact", bookIssue_contact.Text.Trim());
                             cmd.Parameters.AddWithValue("@email", bookIssue_email.Text.Trim());
                             cmd.Parameters.AddWithValue("@bookTitle", bookIssue_bookTitle.Text.Trim());
-                            cmd.Parameters.AddWithValue("@author", bookIssue_author.Text.Trim());
+
                             cmd.Parameters.AddWithValue("@status", bookIssue_status.Text.Trim());
                             cmd.Parameters.AddWithValue("@issueDate", bookIssue_issueDate.Value);
                             cmd.Parameters.AddWithValue("@returnDate", bookIssue_returnDate.Value);
@@ -87,7 +87,7 @@ namespace LibraryManagementSystem
 
                             displayBookIssueData();
 
-                            MessageBox.Show("Issued successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("Issued successy!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                             clearFields();
                         }
@@ -111,7 +111,7 @@ namespace LibraryManagementSystem
             bookIssue_contact.Text = "";
             bookIssue_email.Text = "";
             bookIssue_bookTitle.SelectedIndex = -1;
-            bookIssue_author.SelectedIndex = -1;
+
             bookIssue_status.SelectedIndex = -1;
             bookIssue_picture.Image = null;
         }
@@ -171,7 +171,7 @@ namespace LibraryManagementSystem
 
                             if (table.Rows.Count > 0)
                             {
-                                bookIssue_author.Text = table.Rows[0]["author"].ToString();
+
 
                                 string imagePath = table.Rows[0]["image"].ToString();
 
@@ -203,17 +203,35 @@ namespace LibraryManagementSystem
             if (e.RowIndex != -1)
             {
                 DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                bookIssue_id.Text = row.Cells[1].Value.ToString();
-                bookIssue_name.Text = row.Cells[2].Value.ToString();
-                bookIssue_contact.Text = row.Cells[3].Value.ToString();
-                bookIssue_email.Text = row.Cells[4].Value.ToString();
-                bookIssue_bookTitle.Text = row.Cells[5].Value.ToString();
-                bookIssue_author.Text = row.Cells[6].Value.ToString();
-                bookIssue_issueDate.Text = row.Cells[7].Value.ToString();
-                bookIssue_returnDate.Text = row.Cells[8].Value.ToString();
-                bookIssue_status.Text = row.Cells[9].Value.ToString();
+
+                bookIssue_id.Text = row.Cells[1].Value?.ToString();
+                bookIssue_name.Text = row.Cells[2].Value?.ToString();
+                bookIssue_contact.Text = row.Cells[3].Value?.ToString();
+                bookIssue_email.Text = row.Cells[4].Value?.ToString();
+                bookIssue_bookTitle.Text = row.Cells[5].Value?.ToString();
+                bookIssue_status.Text = row.Cells[9].Value?.ToString();
+
+                // Handle DateTime values safely
+                if (DateTime.TryParse(row.Cells[7].Value?.ToString(), out DateTime issueDate))
+                {
+                    bookIssue_issueDate.Value = issueDate;
+                }
+                else
+                {
+                    MessageBox.Show("Format issue date tidak valid.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                if (DateTime.TryParse(row.Cells[8].Value?.ToString(), out DateTime returnDate))
+                {
+                    bookIssue_returnDate.Value = returnDate;
+                }
+                else
+                {
+                    MessageBox.Show("Format return date tidak valid.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
+
 
         private void bookIssue_updateBtn_Click(object sender, EventArgs e)
         {
@@ -222,7 +240,7 @@ namespace LibraryManagementSystem
                 || bookIssue_contact.Text == ""
                 || bookIssue_email.Text == ""
                 || bookIssue_bookTitle.Text == ""
-                || bookIssue_author.Text == ""
+
                 || bookIssue_issueDate.Value == null
                 || bookIssue_returnDate.Value == null
                 || bookIssue_status.Text == ""
@@ -243,17 +261,17 @@ namespace LibraryManagementSystem
                         {
                             connect.Open();
                             DateTime today = DateTime.Today;
-                            string updateData = "UPDATE issues SET full_name = @fullName, contact = @contact, email = @email" +
-                                ", book_title = @bookTitle, author = @author, status = @status, issue_date = @issueDate" +
+                            string updateData = "UPDATE issues SET name = @Name, contact = @contact, email = @email" +
+                                ", book_title = @bookTitle, status = @status, issue_date = @issueDate" +
                                 ", return_date = @returnDate, date_update = @dateUpdate WHERE issue_id = @issueID";
 
                             using (MySqlCommand cmd = new MySqlCommand(updateData, connect)) // Ganti SqlCommand dengan MySqlCommand
                             {
-                                cmd.Parameters.AddWithValue("@fullName", bookIssue_name.Text.Trim());
+                                cmd.Parameters.AddWithValue("@Name", bookIssue_name.Text.Trim());
                                 cmd.Parameters.AddWithValue("@contact", bookIssue_contact.Text.Trim());
                                 cmd.Parameters.AddWithValue("@email", bookIssue_email.Text.Trim());
                                 cmd.Parameters.AddWithValue("@bookTitle", bookIssue_bookTitle.Text.Trim());
-                                cmd.Parameters.AddWithValue("@author", bookIssue_author.Text.Trim());
+
                                 cmd.Parameters.AddWithValue("@status", bookIssue_status.Text.Trim());
                                 cmd.Parameters.AddWithValue("@issueDate", bookIssue_issueDate.Value);
                                 cmd.Parameters.AddWithValue("@returnDate", bookIssue_returnDate.Value);
@@ -264,7 +282,7 @@ namespace LibraryManagementSystem
 
                                 displayBookIssueData();
 
-                                MessageBox.Show("Updated successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("Updated successy!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                                 clearFields();
                             }
@@ -295,7 +313,7 @@ namespace LibraryManagementSystem
                 || bookIssue_contact.Text == ""
                 || bookIssue_email.Text == ""
                 || bookIssue_bookTitle.Text == ""
-                || bookIssue_author.Text == ""
+
                 || bookIssue_issueDate.Value == null
                 || bookIssue_returnDate.Value == null
                 || bookIssue_status.Text == ""
@@ -327,7 +345,7 @@ namespace LibraryManagementSystem
 
                                 displayBookIssueData();
 
-                                MessageBox.Show("Deleted successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show("Deleted successy!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                                 clearFields();
                             }
@@ -353,6 +371,16 @@ namespace LibraryManagementSystem
         private void bookIssue_clearBtn_Click(object sender, EventArgs e)
         {
             clearFields();
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint_1(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

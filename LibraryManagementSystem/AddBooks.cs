@@ -1,26 +1,24 @@
-﻿using System;
+﻿using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Repositories;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MySql.Data.MySqlClient;  // Menggunakan MySQL Client
 using System.IO;
+using System.Windows.Forms;
 
 namespace LibraryManagementSystem
 {
     public partial class AddBooks : UserControl
     {
-        // Ganti dengan string koneksi MySQL
-        MySqlConnection connect = new MySqlConnection("Server=localhost;Database=libraryapps;Uid=root;Pwd=;");
+        private readonly BookRepository bookRepo = new BookRepository();
+        private string imagePath;
+        private int bookID = 0;
 
         public AddBooks()
         {
             InitializeComponent();
-
             displayBooks();
         }
 
@@ -31,132 +29,130 @@ namespace LibraryManagementSystem
                 Invoke((MethodInvoker)refreshData);
                 return;
             }
-
             displayBooks();
         }
 
-        private String imagePath;
         private void addBooks_importBtn_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenFileDialog dialog = new OpenFileDialog();
-                dialog.Filter = "Image Files (*.jpg; *.png)|*.jpg;*.png";
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Image Files (*.jpg; *.png)|*.jpg;*.png";
 
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    imagePath = dialog.FileName;
-                    addBooks_picture.ImageLocation = imagePath;
-                }
-            }
-            catch (Exception ex)
+            if (dialog.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("Error: " + ex, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                imagePath = dialog.FileName;
+                addBooks_picture.ImageLocation = imagePath;
             }
         }
 
         private void addBooks_addBtn_Click(object sender, EventArgs e)
         {
-            if (addBooks_picture.Image == null
-                || addBooks_bookTitle.Text == ""
-                || addBooks_author.Text == ""
-                || addBooks_published.Value == null
-                || addBooks_status.Text == "")
+            if (!ValidateFields()) return;
+
+            try
             {
-                MessageBox.Show("Please fill all blank fields", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string fileName = addBooks_bookTitle.Text + addBooks_author.Text.Trim() + ".jpg";
+                string savePath = Path.Combine(@"E:\\LibraryManagementSystem\\LibraryManagementSystem\\Books_Directory", fileName);
+                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                File.Copy(addBooks_picture.ImageLocation, savePath, true);
+
+                BookModel book = new BookModel
+                {
+                    BookTitle = addBooks_bookTitle.Text.Trim(),
+                    Author = addBooks_author.Text.Trim(),
+                    PublishedDate = addBooks_published.Value,
+                    Status = addBooks_status.Text.Trim(),
+                    ImagePath = savePath
+                };
+
+                bookRepo.AddBook(book);
+                displayBooks();
+                MessageBox.Show("Added successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                clearFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void addBooks_updateBtn_Click(object sender, EventArgs e)
+        {
+            if (!ValidateFields()) return;
+
+            DialogResult confirm = MessageBox.Show("Update Book ID: " + bookID + "?", "Confirm", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.No) return;
+
+            try
+            {
+                BookModel book = new BookModel
+                {
+                    Id = bookID,
+                    BookTitle = addBooks_bookTitle.Text.Trim(),
+                    Author = addBooks_author.Text.Trim(),
+                    PublishedDate = addBooks_published.Value,
+                    Status = addBooks_status.Text.Trim()
+                };
+
+                bookRepo.UpdateBook(book);
+                displayBooks();
+                MessageBox.Show("Updated successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                clearFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void addBooks_deleteBtn_Click(object sender, EventArgs e)
+        {
+            if (bookID == 0)
+            {
+                MessageBox.Show("Please select item first", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show("Delete Book ID: " + bookID + "?", "Confirm", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.No) return;
+
+            try
+            {
+                bookRepo.DeleteBook(bookID);
+                displayBooks();
+                MessageBox.Show("Deleted successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                clearFields();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void displayBooks()
+        {
+            List<BookModel> books = bookRepo.GetAllBooks();
+            dataGridView1.DataSource = books;
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+            bookID = (int)row.Cells[0].Value;
+            addBooks_bookTitle.Text = row.Cells[1].Value.ToString();
+            addBooks_author.Text = row.Cells[2].Value.ToString();
+            addBooks_published.Text = row.Cells[3].Value.ToString();
+            addBooks_status.Text = row.Cells[4].Value.ToString();
+
+            string imgPath = row.Cells[5].Value.ToString();
+            if (File.Exists(imgPath))
+            {
+                addBooks_picture.Image = Image.FromFile(imgPath);
             }
             else
             {
-                if (connect.State == ConnectionState.Closed)
-                {
-                    try
-                    {
-                        DateTime today = DateTime.Today;
-                        connect.Open();
-                        string insertData = "INSERT INTO books (book_title, author, published_date, status, image, date_insert) " +
-                                            "VALUES(@bookTitle, @author, @published_date, @status, @image, @dateInsert)";
-
-                        string path = Path.Combine(@"C:\Users\HAFIDD\source\repos\LibraryManagementSystem\LibraryManagementSystem\Books_Directory\" +
-                                                    addBooks_bookTitle.Text + addBooks_author.Text.Trim() + ".jpg");
-
-                        string directoryPath = Path.GetDirectoryName(path);
-
-                        if (!Directory.Exists(directoryPath))
-                        {
-                            Directory.CreateDirectory(directoryPath);
-                        }
-
-                        File.Copy(addBooks_picture.ImageLocation, path, true);
-
-                        using (MySqlCommand cmd = new MySqlCommand(insertData, connect))
-                        {
-                            cmd.Parameters.AddWithValue("@bookTitle", addBooks_bookTitle.Text.Trim());
-                            cmd.Parameters.AddWithValue("@author", addBooks_author.Text.Trim());
-                            cmd.Parameters.AddWithValue("@published_date", addBooks_published.Value);
-                            cmd.Parameters.AddWithValue("@status", addBooks_status.Text.Trim());
-                            cmd.Parameters.AddWithValue("@image", path);
-                            cmd.Parameters.AddWithValue("@dateInsert", today);
-
-                            cmd.ExecuteNonQuery();
-
-                            displayBooks();
-
-                            MessageBox.Show("Added successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            clearFields();
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error: " + ex, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        connect.Close();
-                    }
-                }
-            }
-        }
-
-        public void clearFields()
-        {
-            addBooks_bookTitle.Text = "";
-            addBooks_author.Text = "";
-            addBooks_picture.Image = null;
-            addBooks_status.SelectedIndex = -1;
-        }
-
-        public void displayBooks()
-        {
-            DataAddBooks dab = new DataAddBooks();
-            List<DataAddBooks> listData = dab.addBooksData();
-
-            dataGridView1.DataSource = listData;
-        }
-
-        private int bookID = 0;
-        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex != -1)
-            {
-                DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
-                bookID = (int)row.Cells[0].Value;
-                addBooks_bookTitle.Text = row.Cells[1].Value.ToString();
-                addBooks_author.Text = row.Cells[2].Value.ToString();
-                addBooks_published.Text = row.Cells[3].Value.ToString();
-
-                string imagePath = row.Cells[4].Value.ToString();
-
-                if (imagePath != null || imagePath.Length >= 1)
-                {
-                    addBooks_picture.Image = Image.FromFile(imagePath);
-                }
-                else
-                {
-                    addBooks_picture.Image = null;
-                }
-                addBooks_status.Text = row.Cells[5].Value.ToString();
+                addBooks_picture.Image = null;
             }
         }
 
@@ -165,121 +161,27 @@ namespace LibraryManagementSystem
             clearFields();
         }
 
-        private void addBooks_updateBtn_Click(object sender, EventArgs e)
+        private void clearFields()
         {
-            if (addBooks_picture.Image == null
-                || addBooks_bookTitle.Text == ""
-                || addBooks_author.Text == ""
-                || addBooks_published.Value == null
-                || addBooks_status.Text == "")
-            {
-                MessageBox.Show("Please select item first", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                if (connect.State != ConnectionState.Open)
-                {
-                    DialogResult check = MessageBox.Show("Are you sure you want to UPDATE Book ID:"
-                        + bookID + "?", "Confirmation Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                    if (check == DialogResult.Yes)
-                    {
-                        try
-                        {
-                            connect.Open();
-                            DateTime today = DateTime.Today;
-                            string updateData = "UPDATE books SET book_title = @bookTitle, author = @author, " +
-                                "published_date = @published, status = @status, date_update = @dateUpdate WHERE id = @id";
-
-                            using (MySqlCommand cmd = new MySqlCommand(updateData, connect))
-                            {
-                                cmd.Parameters.AddWithValue("@bookTitle", addBooks_bookTitle.Text.Trim());
-                                cmd.Parameters.AddWithValue("@author", addBooks_author.Text.Trim());
-                                cmd.Parameters.AddWithValue("@published", addBooks_published.Value);
-                                cmd.Parameters.AddWithValue("@status", addBooks_status.Text.Trim());
-                                cmd.Parameters.AddWithValue("@dateUpdate", today);
-                                cmd.Parameters.AddWithValue("@id", bookID);
-
-                                cmd.ExecuteNonQuery();
-
-                                displayBooks();
-
-                                MessageBox.Show("Updated successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                                clearFields();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error: " + ex, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        finally
-                        {
-                            connect.Close();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cancelled.", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
+            addBooks_bookTitle.Text = "";
+            addBooks_author.Text = "";
+            addBooks_published.Value = DateTime.Today;
+            addBooks_status.SelectedIndex = -1;
+            addBooks_picture.Image = null;
+            bookID = 0;
         }
 
-        private void addBooks_deleteBtn_Click(object sender, EventArgs e)
+        private bool ValidateFields()
         {
-            if (addBooks_picture.Image == null
-                || addBooks_bookTitle.Text == ""
-                || addBooks_author.Text == ""
-                || addBooks_published.Value == null
-                || addBooks_status.Text == "")
+            if (addBooks_picture.Image == null ||
+                string.IsNullOrWhiteSpace(addBooks_bookTitle.Text) ||
+                string.IsNullOrWhiteSpace(addBooks_author.Text) ||
+                string.IsNullOrWhiteSpace(addBooks_status.Text))
             {
-                MessageBox.Show("Please select item first", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please fill all fields", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
             }
-            else
-            {
-                if (connect.State != ConnectionState.Open)
-                {
-                    DialogResult check = MessageBox.Show("Are you sure you want to DELETE Book ID:"
-                        + bookID + "?", "Confirmation Message", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-                    if (check == DialogResult.Yes)
-                    {
-                        try
-                        {
-                            connect.Open();
-                            DateTime today = DateTime.Today;
-                            string updateData = "UPDATE books SET date_delete = @dateDelete WHERE id = @id";
-
-                            using (MySqlCommand cmd = new MySqlCommand(updateData, connect))
-                            {
-                                cmd.Parameters.AddWithValue("@dateDelete", today);
-                                cmd.Parameters.AddWithValue("@id", bookID);
-
-                                cmd.ExecuteNonQuery();
-
-                                displayBooks();
-
-                                MessageBox.Show("Deleted successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                                clearFields();
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("Error: " + ex, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        finally
-                        {
-                            connect.Close();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Cancelled.", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-                }
-            }
+            return true;
         }
     }
 }

@@ -113,12 +113,6 @@
     <Compile Include="DataAddBooks.cs" />
     <Compile Include="DataIssueBooks.cs" />
     <Compile Include="DBConnection.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="IssueBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -137,6 +131,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\BookModel.cs" />
     <Compile Include="Models\DashboardQuery.cs" />
     <Compile Include="Models\RegisterQuery.cs" />
     <Compile Include="Models\UserQuery.cs" />
@@ -148,6 +143,8 @@
     <Compile Include="RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Repositories\BookRepository.cs" />
+    <Compile Include="ReturnBookQuery.cs" />
     <Compile Include="ReturnBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -159,9 +156,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="IssueBooks.resx">
       <DependentUpon>IssueBooks.cs</DependentUpon>
