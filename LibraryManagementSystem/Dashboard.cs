@@ -33,8 +33,8 @@ namespace LibraryManagementSystem
         {
             try
             {
-                int totalAvailableBooks = query.CountAvailableBooks();
-                dashboard_AB.Text = totalAvailableBooks.ToString();
+            //    int totalAvailableBooks = query.CountAvailableBooks();
+                dashboard_AB.Text = query.CountAvailableBooks().ToString();
             }
             catch (Exception ex)
             {
@@ -69,6 +69,16 @@ namespace LibraryManagementSystem
         }
 
         private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }

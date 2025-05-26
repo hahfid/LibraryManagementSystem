@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace LibraryManagementSystem
 {
-    class DataAddBooks
+    class DataAddBookssss
     {
         private DBConnection db = new DBConnection();
         private MySqlConnection connect;
@@ -17,9 +17,9 @@ namespace LibraryManagementSystem
         public string image { set; get; }
         public string Status { set; get; }
 
-        public List<DataAddBooks> addBooksData()
+        public List<DataAddBookssss> addBooksData()
         {
-            List<DataAddBooks> listData = new List<DataAddBooks>();
+            List<DataAddBookssss> listData = new List<DataAddBookssss>();
             connect = db.GetConnection();
 
             try
@@ -33,7 +33,7 @@ namespace LibraryManagementSystem
                 {
                     while (reader.Read())
                     {
-                        DataAddBooks dab = new DataAddBooks();
+                        DataAddBookssss dab = new DataAddBookssss();
                         dab.ID = Convert.ToInt32(reader["id"]);
                         dab.BookTitle = reader["book_title"].ToString();
                         dab.Author = reader["author"].ToString();

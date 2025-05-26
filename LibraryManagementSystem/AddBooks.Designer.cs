@@ -66,6 +66,7 @@ namespace LibraryManagementSystem
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(828, 808);
             this.panel2.TabIndex = 3;
+            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // dataGridView1
             // 
@@ -109,9 +110,9 @@ namespace LibraryManagementSystem
             this.label1.Location = new System.Drawing.Point(22, 28);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(224, 35);
+            this.label1.Size = new System.Drawing.Size(131, 35);
             this.label1.TabIndex = 0;
-            this.label1.Text = "All Issued Books";
+            this.label1.Text = "All Books";
             // 
             // panel1
             // 
@@ -136,7 +137,6 @@ namespace LibraryManagementSystem
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(416, 808);
             this.panel1.TabIndex = 2;
-         
             // 
             // addBooks_importBtn
             // 

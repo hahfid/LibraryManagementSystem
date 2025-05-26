@@ -1,0 +1,23 @@
+@model List<ProductApp.Models.Product>
+
+<h2>Daftar Produk</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nama Produk</th>
+            <th>Harga</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Id</td>
+                <td>@p.Name</td>
+                <td>@p.Price.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>

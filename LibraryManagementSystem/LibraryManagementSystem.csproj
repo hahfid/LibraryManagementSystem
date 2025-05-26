@@ -110,7 +110,7 @@
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataAddBooks.cs" />
+    <Compile Include="DataAddBookssss.cs" />
     <Compile Include="DataIssueBooks.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="IssueBooks.cs">
