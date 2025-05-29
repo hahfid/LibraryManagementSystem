@@ -1,17 +1,38 @@
 ﻿using System;
-using System.Data;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
-using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Controllers;
 
 namespace LibraryManagementSystem
 {
     public partial class LoginForm : Form
     {
+        private LoginController loginController;
+
         public LoginForm()
         {
             InitializeComponent();
+            loginController = new LoginController();
         }
+
+        private void loginBtn_Click(object sender, EventArgs e)
+        {
+            string message;
+            bool isLoginSuccess = loginController.Login(login_username.Text, login_password.Text, out message);
+
+            if (isLoginSuccess)
+            {
+                MessageBox.Show(message, "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MainForm mForm = new MainForm();
+                mForm.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // kode event handler lain tetap sama seperti semula...
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -30,38 +51,6 @@ namespace LibraryManagementSystem
             login_password.PasswordChar = login_showPass.Checked ? '\0' : '*';
         }
 
-        private void loginBtn_Click(object sender, EventArgs e)
-        {
-            if (login_username.Text == "" || login_password.Text == "")
-            {
-                MessageBox.Show("Please fill all blank fields", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                try
-                {
-                    UserQuery userQuery = new UserQuery();
-                    bool isLoginSuccess = userQuery.Login(login_username.Text, login_password.Text);
-
-                    if (isLoginSuccess)
-                    {
-                        MessageBox.Show("Login Successfully!", "Information Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        MainForm mForm = new MainForm();
-                        mForm.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Incorrect Username/Password", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error connecting to Database: " + ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
         private void LoginForm_Load(object sender, EventArgs e)
         {
         }
@@ -72,12 +61,10 @@ namespace LibraryManagementSystem
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

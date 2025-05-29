@@ -104,6 +104,8 @@
     <Compile Include="AddBooks.Designer.cs">
       <DependentUpon>AddBooks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Dashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
