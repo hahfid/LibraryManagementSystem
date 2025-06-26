@@ -98,39 +98,39 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddBooks.cs">
+    <Compile Include="Views\AddBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="AddBooks.Designer.cs">
+    <Compile Include="Views\AddBooks.Designer.cs">
       <DependentUpon>AddBooks.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
-    <Compile Include="Dashboard.cs">
+    <Compile Include="Views\Dashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Dashboard.Designer.cs">
+    <Compile Include="Views\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
     <Compile Include="Controllers\DataIssueBooks.cs" />
     <Compile Include="DBConnection.cs" />
-    <Compile Include="IssueBooks.cs">
+    <Compile Include="Views\IssueBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="IssueBooks.Designer.cs">
+    <Compile Include="Views\IssueBooks.Designer.cs">
       <DependentUpon>IssueBooks.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoginForm.cs">
+    <Compile Include="Views\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LoginForm.Designer.cs">
+    <Compile Include="Views\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainForm.cs">
+    <Compile Include="Views\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="Views\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\BookModel.cs" />
@@ -140,33 +140,33 @@
     <Compile Include="Models\UserQuery.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterForm.cs">
+    <Compile Include="Views\RegisterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RegisterForm.Designer.cs">
+    <Compile Include="Views\RegisterForm.Designer.cs">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\BookRepository.cs" />
     <Compile Include="Models\ReturnBookQuery.cs" />
-    <Compile Include="ReturnBooks.cs">
+    <Compile Include="Views\ReturnBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ReturnBooks.Designer.cs">
+    <Compile Include="Views\ReturnBooks.Designer.cs">
       <DependentUpon>ReturnBooks.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AddBooks.resx">
+    <EmbeddedResource Include="Views\AddBooks.resx">
       <DependentUpon>AddBooks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dashboard.resx">
+    <EmbeddedResource Include="Views\Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="IssueBooks.resx">
+    <EmbeddedResource Include="Views\IssueBooks.resx">
       <DependentUpon>IssueBooks.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LoginForm.resx">
+    <EmbeddedResource Include="Views\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="Views\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -179,10 +179,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="RegisterForm.resx">
+    <EmbeddedResource Include="Views\RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ReturnBooks.resx">
+    <EmbeddedResource Include="Views\ReturnBooks.resx">
       <DependentUpon>ReturnBooks.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
