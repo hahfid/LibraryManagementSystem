@@ -96,5 +96,10 @@ namespace LibraryManagementSystem
         {
 
         }
+
+        private void dashboard1_Load_2(object sender, EventArgs e)
+        {
+
+        }
     }
 }

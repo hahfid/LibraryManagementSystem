@@ -1,9 +1,7 @@
 ﻿using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Repositories;
+using LibraryManagementSystem.Controllers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -12,7 +10,7 @@ namespace LibraryManagementSystem
 {
     public partial class AddBooks : UserControl
     {
-        private readonly BookRepository bookRepo = new BookRepository();
+        private readonly BookController bookController = new BookController();
         private string imagePath;
         private int bookID = 0;
 
@@ -50,21 +48,15 @@ namespace LibraryManagementSystem
 
             try
             {
-                string fileName = addBooks_bookTitle.Text + addBooks_author.Text.Trim() + ".jpg";
-                string savePath = Path.Combine(@"E:\\LibraryManagementSystem\\LibraryManagementSystem\\Books_Directory", fileName);
-                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-                File.Copy(addBooks_picture.ImageLocation, savePath, true);
-
                 BookModel book = new BookModel
                 {
                     BookTitle = addBooks_bookTitle.Text.Trim(),
                     Author = addBooks_author.Text.Trim(),
                     PublishedDate = addBooks_published.Value,
-                    Status = addBooks_status.Text.Trim(),
-                    ImagePath = savePath
+                    Status = addBooks_status.Text.Trim()
                 };
 
-                bookRepo.AddBook(book);
+                bookController.AddBook(book, imagePath);
                 displayBooks();
                 MessageBox.Show("Added successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 clearFields();
@@ -93,7 +85,7 @@ namespace LibraryManagementSystem
                     Status = addBooks_status.Text.Trim()
                 };
 
-                bookRepo.UpdateBook(book);
+                bookController.UpdateBook(book);
                 displayBooks();
                 MessageBox.Show("Updated successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 clearFields();
@@ -117,7 +109,7 @@ namespace LibraryManagementSystem
 
             try
             {
-                bookRepo.DeleteBook(bookID);
+                bookController.DeleteBook(bookID);
                 displayBooks();
                 MessageBox.Show("Deleted successfully!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 clearFields();
@@ -130,7 +122,7 @@ namespace LibraryManagementSystem
 
         private void displayBooks()
         {
-            List<BookModel> books = bookRepo.GetAllBooks();
+            List<BookModel> books = bookController.GetAllBooks();
             dataGridView1.DataSource = books;
         }
 
@@ -149,10 +141,12 @@ namespace LibraryManagementSystem
             if (File.Exists(imgPath))
             {
                 addBooks_picture.Image = Image.FromFile(imgPath);
+                imagePath = imgPath;
             }
             else
             {
                 addBooks_picture.Image = null;
+                imagePath = null;
             }
         }
 
@@ -168,6 +162,7 @@ namespace LibraryManagementSystem
             addBooks_published.Value = DateTime.Today;
             addBooks_status.SelectedIndex = -1;
             addBooks_picture.Image = null;
+            imagePath = null;
             bookID = 0;
         }
 
@@ -186,7 +181,7 @@ namespace LibraryManagementSystem
 
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
-
+            // Kosongkan jika tidak digunakan
         }
     }
 }

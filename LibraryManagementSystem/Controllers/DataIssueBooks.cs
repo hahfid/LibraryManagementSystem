@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace LibraryManagementSystem
 {
-    class DataIssueBooks
+    public class DataIssueBooks
     {
         private DBConnection db = new DBConnection();
         private MySqlConnection connect;

@@ -104,6 +104,7 @@
     <Compile Include="AddBooks.Designer.cs">
       <DependentUpon>AddBooks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\BookController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Dashboard.cs">
@@ -112,8 +113,7 @@
     <Compile Include="Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataAddBookssss.cs" />
-    <Compile Include="DataIssueBooks.cs" />
+    <Compile Include="Controllers\DataIssueBooks.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="IssueBooks.cs">
       <SubType>UserControl</SubType>
@@ -135,6 +135,7 @@
     </Compile>
     <Compile Include="Models\BookModel.cs" />
     <Compile Include="Models\DashboardQuery.cs" />
+    <Compile Include="Models\IssueBookModel.cs" />
     <Compile Include="Models\RegisterQuery.cs" />
     <Compile Include="Models\UserQuery.cs" />
     <Compile Include="Program.cs" />
@@ -146,7 +147,7 @@
       <DependentUpon>RegisterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Repositories\BookRepository.cs" />
-    <Compile Include="ReturnBookQuery.cs" />
+    <Compile Include="Models\ReturnBookQuery.cs" />
     <Compile Include="ReturnBooks.cs">
       <SubType>UserControl</SubType>
     </Compile>

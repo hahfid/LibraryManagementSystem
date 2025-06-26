@@ -227,6 +227,7 @@ namespace LibraryManagementSystem
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Dashboard";
             this.Size = new System.Drawing.Size(1320, 869);
+            this.Load += new System.EventHandler(this.Dashboard_Load);
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();

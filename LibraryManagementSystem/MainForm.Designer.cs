@@ -230,6 +230,7 @@ namespace LibraryManagementSystem
             this.dashboard1.Name = "dashboard1";
             this.dashboard1.Size = new System.Drawing.Size(1321, 817);
             this.dashboard1.TabIndex = 0;
+            this.dashboard1.Load += new System.EventHandler(this.dashboard1_Load_2);
             // 
             // addBooks1
             // 
